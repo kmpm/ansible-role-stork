@@ -6,3 +6,9 @@
     name: isc-stork-server
     state: restarted
     enabled: yes
+    
+- name: restart stork-agent
+  ansible.builtin.systemd:
+    name: isc-stork-agent
+    state: restarted
+    enabled: yes

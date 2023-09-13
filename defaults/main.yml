@@ -13,4 +13,14 @@ stork_db_password: mysupersecretwordnobodyknows
 # stork rest api
 stork_rest_host: "0.0.0.0"
 ## this might collide with kea-ctrl-agent
-stork_rest_port: 8080
+stork_rest_port: 8081
+
+stork_rest_static_files_dir: /usr/share/stork/www
+
+
+
+# stork agent
+stork_agent_host: "127.0.0.1"
+stork_agent_port: 8082
+stork_agent_skip_tls_verification: true
+stork_agent_server_url: http://localhost:8081
