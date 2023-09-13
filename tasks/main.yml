@@ -1,0 +1,20 @@
+---
+# main tasks for stork
+- name: Include postgres 
+  include_tasks: "{{ ansible_distribution }}_postgres.yml"
+  
+
+- name: Include stork stuff
+  include_tasks: "{{ ansible_distribution }}_install.yml"
+  
+
+- name: Configure stork server
+  ansible.builtin.template:
+    src: server.env.j2
+    dest: /etc/stork/server.env
+    mode: '0644'
+    owner: "root"
+    group: "root"
+  notify: restart stork-server
+
+  

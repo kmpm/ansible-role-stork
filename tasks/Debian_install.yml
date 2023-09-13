@@ -1,0 +1,30 @@
+---
+# tasks for installing on debian
+- name: Install prerequisites
+  ansible.builtin.apt:
+    pkg: 
+      - gpg
+      - curl
+
+- name: Add cloudsmith stork repos key
+  ansible.builtin.shell: "curl -1sLf 'https://dl.cloudsmith.io/public/isc/stork/gpg.77F64EC28053D1FB.key' |  gpg --dearmor >> {{ stork_keyring_location }}"
+  args:
+    creates: "{{ stork_keyring_location }}"
+    
+- name: Add cloudsmith stork deb repository into sources list
+  ansible.builtin.apt_repository:
+    repo: "deb [signed-by={{ stork_keyring_location }}]  https://dl.cloudsmith.io/public/isc/stork/deb/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    state: present
+    filename: isc-stork
+    
+- name: Add cloudsmith stork deb-src repository into sources list
+  ansible.builtin.apt_repository:
+    repo: "deb-src [signed-by={{ stork_keyring_location }}]  https://dl.cloudsmith.io/public/isc/stork/deb/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main"
+    state: present
+    filename: isc-stork
+    
+- name: Install stork packages
+  ansible.builtin.apt:
+    pkg: 
+      - isc-stork-server
+      - isc-stork-agent

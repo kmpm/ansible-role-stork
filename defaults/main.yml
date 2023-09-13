@@ -1,0 +1,16 @@
+---
+# defaults file for stork
+
+stork_keyring_location: "/usr/share/keyrings/isc-stork-archive-keyring.gpg"
+
+# stork database
+stork_db_host: localhost
+stork_db_name: stork
+stork_db_user: stork
+stork_db_password: mysupersecretwordnobodyknows
+
+
+# stork rest api
+stork_rest_host: "0.0.0.0"
+## this might collide with kea-ctrl-agent
+stork_rest_port: 8080
