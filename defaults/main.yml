@@ -3,7 +3,7 @@
 stork_keyring_location: "/usr/share/keyrings/isc-stork-archive-keyring.gpg"
 stork_agent: yes
 stork_server: yes
-fact_path: /etc/ansible/facts.d
+stork_fact_path: "{{ '/etc/ansible/facts.d' if lookup('config', 'DEFAULT_FACT_PATH') is none or lookup('config', 'DEFAULT_FACT_PATH') == ''  else lookup('config', 'DEFAULT_FACT_PATH') }}"
 
 # stork database
 stork_db_host: localhost

@@ -43,7 +43,7 @@
   
 - name: update facts with registration
   ansible.builtin.ini_file:
-    path: "{{ fact_path }}/stork.fact"
+    path: "{{ stork_fact_path }}/stork.fact"
     section: agent
     option: registerd
     value: "{{ stork_agent_registration.rc == 0 }}"

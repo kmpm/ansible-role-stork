@@ -1,14 +1,14 @@
 ---
-- name: Create directory for ansible custom facts
+- name: "Create directory for ansible custom facts '{{ stork_fact_path }}'"
   ansible.builtin.file:
     state: directory
-    path: "{{ fact_path }}"
+    path: "{{ stork_fact_path }}"
     mode: '0755'
     
 - name: default stork.fact
   ansible.builtin.copy:
     content: ""
-    dest: "{{ fact_path }}/stork.fact"
+    dest: "{{ stork_fact_path }}/stork.fact"
     force: no
     mode: 0644
   notify:
