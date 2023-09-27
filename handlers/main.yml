@@ -12,3 +12,7 @@
     name: isc-stork-agent
     state: restarted
     enabled: yes
+    
+- name: "reload ansible_local"
+  ansible.builtin.setup:
+    filter: "ansible_local"

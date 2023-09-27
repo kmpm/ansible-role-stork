@@ -1,0 +1,53 @@
+---
+# make sure we have a stork_server_token
+- block:
+  - name: make sure server is running
+    ansible.builtin.systemd:
+      name: isc-stork-server
+      state: restarted
+      enabled: yes
+    when: stork_server
+    
+  - name: login stork rest
+    ansible.builtin.uri:
+      url: "{{ stork_server_url }}/api/sessions"
+      method: POST
+      body_format: json
+      body:
+        authenticationMethodId: internal
+        identifier: "{{ stork_rest_user }}"
+        secret: "{{ stork_rest_password }}"
+    register: login
+    
+  - name: get server token by rest
+    ansible.builtin.uri:
+      url: "{{ stork_server_url }}/api/machines-server-token"
+      method: GET
+      headers:
+        Cookie: "{{ login.cookies_string }}"
+    register: stork_rest_response
+  - name: set stork_server_token
+    ansible.builtin.set_fact:
+      stork_server_token: "{{ stork_rest_response.json.token }}"
+  when: stork_server_token is undefined
+
+
+
+
+# register agent
+- name: register stork agent
+  ansible.builtin.command: 
+    cmd: "stork-agent register --agent-host {{ stork_agent_host }}:{{stork_agent_port}} --server-url {{ stork_server_url }} --server-token {{ stork_server_token }}"
+  become_user: stork-agent
+  register: stork_agent_registration
+  
+- name: update facts with registration
+  ansible.builtin.ini_file:
+    path: "{{ fact_path }}/stork.fact"
+    section: agent
+    option: registerd
+    value: "{{ stork_agent_registration.rc == 0 }}"
+    mode: '0644'
+  notify:
+    - reload ansible_local
+  

@@ -1,0 +1,24 @@
+---
+- name: Create directory for ansible custom facts
+  ansible.builtin.file:
+    state: directory
+    path: "{{ fact_path }}"
+    mode: '0755'
+    
+- name: default stork.fact
+  ansible.builtin.copy:
+    content: ""
+    dest: "{{ fact_path }}/stork.fact"
+    force: no
+    mode: 0644
+  notify:
+    - reload ansible_local
+    
+- name: "reload ansible_local"
+  ansible.builtin.setup:
+    filter: "ansible_local"
+
+- name: ansible_local to facts
+  ansible.builtin.set_fact: 
+    stork_agent_registerd: "{{ ansible_local['stork']['agent']['registerd'] | default(False) }}"
+    

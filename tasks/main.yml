@@ -1,5 +1,7 @@
 ---
 # main tasks for stork
+- include_tasks: "stork_facts.yml"
+
 - name: Include postgres 
   include_tasks: "{{ ansible_distribution }}_postgres.yml"
   
@@ -16,12 +18,34 @@
     owner: "root"
     group: "root"
   notify: restart stork-server
+  when: stork_server
 
-- name: Configure stork-agent
-  ansible.builtin.template:
-    src: agent.env.j2
-    dest: /etc/stork/agent.env
-    mode: '0644'
-    owner: "root"
-    group: "root"
-  notify: restart stork-agent
+
+
+- block:
+  - name: Configure stork-agent
+    ansible.builtin.template:
+      src: agent.env.j2
+      dest: /etc/stork/agent.env
+      mode: '0644'
+      owner: "root"
+      group: "root"
+    notify: restart stork-agent
+    
+  - name: Include registration 
+    include_tasks: "agent_registration.yml"
+    when: not stork_agent_registerd | bool 
+  
+  when: stork_agent
+  
+  
+
+  
+
+
+
+
+  
+  # args:
+  #   creates: "{{ stork_keyring_location }}"
+#  su stork-agent -s /bin/sh -c 'stork-agent register --server-url http://127.0.0.1:8081'

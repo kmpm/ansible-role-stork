@@ -1,7 +1,9 @@
 ---
 # defaults file for stork
-
 stork_keyring_location: "/usr/share/keyrings/isc-stork-archive-keyring.gpg"
+stork_agent: yes
+stork_server: yes
+fact_path: /etc/ansible/facts.d
 
 # stork database
 stork_db_host: localhost
@@ -9,18 +11,24 @@ stork_db_name: stork
 stork_db_user: stork
 stork_db_password: mysupersecretwordnobodyknows
 
-
-# stork rest api
-stork_rest_host: "0.0.0.0"
-## this might collide with kea-ctrl-agent
-stork_rest_port: 8081
-
-stork_rest_static_files_dir: /usr/share/stork/www
-
+# stork server, including rest api
+stork_server_log_level: DEBUG
+stork_server_host: "0.0.0.0"
+stork_server_port: 8081
+stork_server_static_files_dir: /usr/share/stork/www
+stork_server_hostname: "127.0.0.1"
+stork_server_url: "http://{{ stork_server_hostname }}:{{ stork_server_port }}"
 
 
 # stork agent
+stork_agent_log_level: DEBUG
 stork_agent_host: "127.0.0.1"
 stork_agent_port: 8082
 stork_agent_skip_tls_verification: true
-stork_agent_server_url: http://localhost:8081
+stork_agent_hostname: "{{ stork_agent_host }}"
+stork_agent_url: "http://{{ stork_agent_hostname }}:{{ stork_agent_port }}"
+
+
+## needed for agent registration
+stork_rest_user: admin
+stork_rest_password: admin

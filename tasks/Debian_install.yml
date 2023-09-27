@@ -5,6 +5,8 @@
     pkg: 
       - gpg
       - curl
+      # to be able to become an unprivileged user in ansible
+      - acl    
 
 - name: Add cloudsmith stork repos key
   ansible.builtin.shell: "curl -1sLf 'https://dl.cloudsmith.io/public/isc/stork/gpg.77F64EC28053D1FB.key' |  gpg --dearmor >> {{ stork_keyring_location }}"
@@ -23,8 +25,16 @@
     state: present
     filename: isc-stork
     
-- name: Install stork packages
+- name: Install stork server packages
   ansible.builtin.apt:
     pkg: 
       - isc-stork-server
+  when: stork_server
+
+- name: Install stork agent packages
+  ansible.builtin.apt:
+    pkg: 
       - isc-stork-agent
+  when: stork_agent
+  
+        

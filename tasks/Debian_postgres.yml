@@ -1,52 +1,7 @@
 ---
-# - name: Install postgres server and dependencies
-#   ansible.builtin.apt:
-#     pkg: 
-#       - postgresql
-#       - acl
-#       - python3-psycopg2
-      
-# # - name: "Enable localhost login in pg_hba"
-# #   community.postgresql.postgresql_pg_hba:
-# #   dest: /etc/postgresql/15/main/pg_hba.conf
-  
-  
-
-# - name: "Create stork database {{ stork_db_name }}"
-#   community.postgresql.postgresql_db:
-#     name: "{{ stork_db_name }}"
-#   become_user: postgres
-
 - name: Enable pgcrypto
   community.postgresql.postgresql_ext:
     name: pgcrypto
     db: "{{ stork_db_name }}"
   become_user: postgres
-
-# - name: Create stork database user
-#   community.postgresql.postgresql_user:
-#     name: "{{ stork_db_user }}"
-#     password: "{{ stork_db_password }}"
-#   # environment:
-#   #   PGOPTIONS: "-c password_encryption=scram-sha-256"
-#   become_user: postgres
-  
-# - name: Assign privileges on database to user
-#   community.postgresql.postgresql_privs:
-#     database: "{{ stork_db_name }}"
-#     privs: ALL
-#     role: "{{ stork_db_user }}"
-#     type: database
-#   become_user: postgres
-#   notify: restart stork-server
-
-# - name: Assign privileges on database tables to user
-#   community.postgresql.postgresql_privs:
-#     database: "{{ stork_db_name }}"
-#     objs: public
-#     privs: ALL
-#     type: schema
-#     role: "{{ stork_db_user }}"
-#   become_user: postgres
-#   notify: restart stork-server  
-  
+  when: stork_server
