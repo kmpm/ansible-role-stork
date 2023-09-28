@@ -37,15 +37,7 @@
     when: not stork_agent_registerd | bool 
   
   when: stork_agent
-  
-  
-
-  
-
-
-
-
-  
+    
   # args:
   #   creates: "{{ stork_keyring_location }}"
 #  su stork-agent -s /bin/sh -c 'stork-agent register --server-url http://127.0.0.1:8081'

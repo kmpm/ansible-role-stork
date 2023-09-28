@@ -7,7 +7,7 @@
       state: restarted
       enabled: yes
     when: stork_server
-    
+
   - name: login stork rest
     ansible.builtin.uri:
       url: "{{ stork_server_url }}/api/sessions"
@@ -18,7 +18,7 @@
         identifier: "{{ stork_rest_user }}"
         secret: "{{ stork_rest_password }}"
     register: login
-    
+
   - name: get server token by rest
     ansible.builtin.uri:
       url: "{{ stork_server_url }}/api/machines-server-token"
@@ -32,15 +32,13 @@
   when: stork_server_token is undefined
 
 
-
-
 # register agent
 - name: register stork agent
-  ansible.builtin.command: 
+  ansible.builtin.command:
     cmd: "stork-agent register --agent-host {{ stork_agent_host }}:{{stork_agent_port}} --server-url {{ stork_server_url }} --server-token {{ stork_server_token }}"
   become_user: stork-agent
   register: stork_agent_registration
-  
+
 - name: update facts with registration
   ansible.builtin.ini_file:
     path: "{{ stork_fact_path }}/stork.fact"
@@ -50,4 +48,3 @@
     mode: '0644'
   notify:
     - reload ansible_local
-  
